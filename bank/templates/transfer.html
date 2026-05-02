@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.transfer-section{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:80vh;
+}
+
+.transfer-card{
+    background:white;
+    padding:50px 60px;
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.15);
+    width:450px;
+}
+
+.transfer-card h2{
+    text-align:center;
+    margin-bottom:30px;
+    color:#333;
+}
+
+.input-box{
+    margin-bottom:20px;
+}
+
+.input-box input{
+    width:100%;
+    padding:14px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.input-box input:focus{
+    border-color:#667eea;
+    outline:none;
+}
+
+.transfer-btn{
+    width:100%;
+    background:#27ae60;
+    color:white;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.transfer-btn:hover{
+    background:#219150;
+}
+
+.error{
+    background:#ffe6e6;
+    color:#c0392b;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.success{
+    background:#e6ffed;
+    color:#27ae60;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:15px;
+    text-align:center;
+    font-weight:bold;
+}
+</style>
+
+<div class="transfer-section">
+    <div class="transfer-card">
+        <h2>💸 Transfer Money</h2>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+            <div class="success">{{ success }}</div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="input-box">
+                <input type="text" name="receiver" placeholder="Receiver Account Number" required>
+            </div>
+
+            <div class="input-box">
+                <input type="number" name="amount" placeholder="Enter Amount" required>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="pin" placeholder="Enter Your PIN" required maxlength="6">
+            </div>
+
+            <button type="submit" class="transfer-btn">Send Money</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

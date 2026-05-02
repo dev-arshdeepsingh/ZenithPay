@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .setpin-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 80px);
+        padding: 40px 20px;
+    }
+
+    .setpin-container {
+        background: white;
+        border-radius: 30px;
+        padding: 60px 70px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        max-width: 550px;
+        width: 100%;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .setpin-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .setpin-icon {
+        font-size: 70px;
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .setpin-header h1 {
+        font-size: 36px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        font-weight: 800;
+    }
+
+    .setpin-header p {
+        color: #718096;
+        font-size: 16px;
+    }
+
+    .account-info {
+        background: linear-gradient(135deg, #f0f4ff 0%, #f5f0ff 100%);
+        border-left: 4px solid #667eea;
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .account-info-icon {
+        font-size: 24px;
+    }
+
+    .account-info-content {
+        flex: 1;
+    }
+
+    .account-info-label {
+        font-size: 12px;
+        color: #718096;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .account-info-value {
+        font-size: 18px;
+        color: #2d3748;
+        font-weight: 700;
+    }
+
+    .form-group {
+        margin-bottom: 30px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #2d3748;
+        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 15px;
+    }
+
+    .pin-input-wrapper {
+        position: relative;
+    }
+
+    .lock-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 22px;
+        color: #667eea;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 18px 20px 18px 55px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 10px;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f7fafc;
+        text-align: center;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group input::placeholder {
+        color: #a0aec0;
+        font-weight: 400;
+        letter-spacing: 2px;
+    }
+
+    .pin-requirements {
+        background: #f7fafc;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 25px;
+    }
+
+    .requirement-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 10px;
+    }
+
+    .requirement-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #718096;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .requirement-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .check-icon {
+        color: #27ae60;
+        font-weight: bold;
+    }
+
+    .setpin-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 18px;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        margin-top: 10px;
+    }
+
+    .setpin-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .setpin-btn:active {
+        transform: translateY(0);
+    }
+
+    .security-note {
+        background: linear-gradient(135deg, #fff5e6 0%, #fef9f2 100%);
+        border-left: 4px solid #f39c12;
+        padding: 16px 20px;
+        border-radius: 10px;
+        margin-top: 25px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .security-icon {
+        font-size: 20px;
+        margin-top: 2px;
+    }
+
+    .security-text {
+        color: #2d3748;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .setpin-container {
+            padding: 40px 30px;
+        }
+
+        .setpin-header h1 {
+            font-size: 28px;
+        }
+
+        .setpin-icon {
+            font-size: 60px;
+        }
+
+        .form-group input {
+            font-size: 18px;
+            padding: 16px 18px 16px 50px;
+            letter-spacing: 8px;
+        }
+
+        .setpin-btn {
+            font-size: 16px;
+            padding: 16px;
+        }
+    }
+</style>
+
+<div class="setpin-section">
+    <div class="setpin-container">
+        <div class="setpin-header">
+            <div class="setpin-icon">🔐</div>
+            <h1>Set Your PIN</h1>
+            <p>Create a secure 6-digit PIN for your account</p>
+        </div>
+
+        <div class="account-info">
+            <span class="account-info-icon">🏦</span>
+            <div class="account-info-content">
+                <div class="account-info-label">Account Number</div>
+                <div class="account-info-value">XXXXXXXX{{ acc.acc_no|stringformat:"s"|slice:"-2:" }}</div>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="pin">Enter 6-Digit PIN</label>
+                <div class="pin-input-wrapper">
+                    <span class="lock-icon">🔒</span>
+                    <input 
+                        type="password" 
+                        id="pin" 
+                        name="pin" 
+                        placeholder="••••••" 
+                        required
+                        maxlength="6"
+                        pattern="[0-9]{6}"
+                        inputmode="numeric"
+                    >
+                </div>
+            </div>
+
+            <div class="pin-requirements">
+                <div class="requirement-title">PIN Requirements:</div>
+                <div class="requirement-item">
+                    <span class="check-icon">✓</span>
+                    <span>Must be exactly 6 digits</span>
+                </div>
+                <div class="requirement-item">
+                    <span class="check-icon">✓</span>
+                    <span>Use numbers only (0-9)</span>
+                </div>
+                <div class="requirement-item">
+                    <span class="check-icon">✓</span>
+                    <span>Avoid common PINs like 123456 or 000000</span>
+                </div>
+                <div class="requirement-item">
+                    <span class="check-icon">✓</span>
+                    <span>Keep it confidential and secure</span>
+                </div>
+            </div>
+
+            <button type="submit" class="setpin-btn">Set PIN</button>
+
+            <div class="security-note">
+                <span class="security-icon">🛡️</span>
+                <div class="security-text">
+                    <strong>Security Tip:</strong> Never share your PIN with anyone. Our bank will never ask for your PIN via phone, email, or SMS.
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

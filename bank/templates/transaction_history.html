@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .history-section {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px 40px;
+    }
+
+    .panel {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        margin-bottom: 20px;
+        color: #1e293b;
+    }
+
+    .panel h2 {
+        margin-bottom: 16px;
+        color: #2d3748;
+    }
+
+    .filters {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr auto auto;
+        gap: 12px;
+        align-items: end;
+    }
+
+    .filters label {
+        display: block;
+        margin-bottom: 6px;
+        color: #4a5568;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #d2d6dc;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 10px 14px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: #4f46e5;
+        color: white;
+    }
+
+    .btn-light {
+        background: #edf2f7;
+        color: #2d3748;
+    }
+
+    .txn-row {
+        border-bottom: 1px solid #edf2f7;
+        padding: 12px 0;
+        color: #1e293b;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    .txn-row:last-child {
+        border-bottom: none;
+    }
+
+    .txn-type {
+        display: inline-block;
+        min-width: 140px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 14px;
+        padding: 4px 8px;
+        margin-right: 8px;
+    }
+
+    .txn-in {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .txn-out {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .txn-time {
+        color: #718096;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    @media (max-width: 900px) {
+        .filters {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="history-section">
+    <div class="panel">
+        <h2>Transaction History</h2>
+        <form method="get" class="filters">
+            <div>
+                <label for="type">Type</label>
+                <select id="type" name="type">
+                    <option value="">All</option>
+                    {% for value, label in txn_types %}
+                        <option value="{{ value }}" {% if selected_type == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="from_date">From Date</label>
+                <input id="from_date" type="date" name="from_date" value="{{ from_date }}">
+            </div>
+            <div>
+                <label for="to_date">To Date</label>
+                <input id="to_date" type="date" name="to_date" value="{{ to_date }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Apply</button>
+            <a href="{% url 'transaction_history' %}" class="btn btn-light">Reset</a>
+        </form>
+    </div>
+
+    <div class="panel">
+        {% if transactions %}
+            {% for txn in transactions %}
+            <div class="txn-row">
+                {% if txn.transaction_type == 'transfer_sent' %}
+                    <span class="txn-type txn-out">Transfer Sent</span>
+                    ₹{{ txn.amount }} sent to {{ txn.counterparty.name }} (A/C {{ txn.counterparty.acc_no }})
+                {% elif txn.transaction_type == 'transfer_received' %}
+                    <span class="txn-type txn-in">Transfer Received</span>
+                    ₹{{ txn.amount }} received from {{ txn.counterparty.name }} (A/C {{ txn.counterparty.acc_no }})
+                {% elif txn.transaction_type == 'deposit' %}
+                    <span class="txn-type txn-in">Deposit</span>
+                    ₹{{ txn.amount }} credited to your account
+                {% else %}
+                    <span class="txn-type txn-out">Withdraw</span>
+                    ₹{{ txn.amount }} debited from your account
+                {% endif %}
+                <div class="txn-time">{{ txn.created_at|date:"d M Y, h:i A" }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="txn-row">No transactions found for selected filters.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

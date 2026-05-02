@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .login-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 80px);
+        padding: 40px 20px;
+    }
+
+    .login-container {
+        background: white;
+        border-radius: 30px;
+        padding: 60px 70px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        max-width: 500px;
+        width: 100%;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .login-icon {
+        font-size: 70px;
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .login-header h1 {
+        font-size: 36px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        font-weight: 800;
+    }
+
+    .login-header p {
+        color: #718096;
+        font-size: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        color: #2d3748;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: #a0aec0;
+        transition: color 0.3s ease;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 16px 18px 16px 55px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f7fafc;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group input:focus + .input-icon {
+        color: #667eea;
+    }
+
+    .form-group input::placeholder {
+        color: #a0aec0;
+    }
+
+    .login-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 16px;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        margin-top: 10px;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .login-btn:active {
+        transform: translateY(0);
+    }
+
+    .error-message {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        animation: shake 0.5s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    .create-account-link {
+        text-align: center;
+        margin-top: 25px;
+        color: #718096;
+        font-size: 14px;
+    }
+
+    .create-account-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .create-account-link a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+
+    .forgot-pin {
+        text-align: right;
+        margin-top: 8px;
+    }
+
+    .forgot-pin a {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .forgot-pin a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+
+    .contact-dialog {
+        position: relative;
+        max-width: 420px;
+        width: calc(100% - 32px);
+        padding: 0;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .contact-dialog::backdrop {
+        background: rgba(45, 55, 72, 0.55);
+        backdrop-filter: blur(4px);
+    }
+
+    .contact-dialog-inner {
+        padding: 28px 26px 24px;
+    }
+
+    .contact-dialog h3 {
+        margin: 0 0 14px;
+        font-size: 18px;
+        color: #2d3748;
+        font-weight: 700;
+    }
+
+    .contact-dialog p {
+        margin: 0;
+        color: #4a5568;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .contact-dialog-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: #f7fafc;
+        border-radius: 10px;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        color: #4a5568;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .contact-dialog-close:hover {
+        background: #edf2f7;
+        color: #2d3748;
+    }
+
+    .contact-dialog-actions {
+        margin-top: 22px;
+        text-align: right;
+    }
+
+    .contact-dialog-ok {
+        padding: 10px 22px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+    }
+
+    .contact-dialog-ok:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(102, 126, 234, 0.5);
+    }
+
+    /* Security badge */
+    .security-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 25px;
+        color: #718096;
+        font-size: 13px;
+    }
+
+    .security-badge span {
+        font-size: 16px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .login-container {
+            padding: 40px 30px;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+        }
+
+        .login-icon {
+            font-size: 60px;
+        }
+
+        .login-btn {
+            font-size: 16px;
+            padding: 14px;
+        }
+
+        .form-group input {
+            padding: 14px 16px 14px 50px;
+        }
+    }
+</style>
+
+<div class="login-section">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon">🔐</div>
+            <h1>Account Login</h1>
+            <p>Welcome back! Please login to your account</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="acc_no">Account Number</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="acc_no" 
+                        name="acc_no" 
+                        placeholder="Enter your account number" 
+                        required
+                        autocomplete="off"
+                    >
+                    <div class="input-icon">🏦</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="pin">PIN</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="pin" 
+                        name="pin" 
+                        placeholder="Enter your PIN" 
+                        required
+                        autocomplete="current-password"
+                    >
+                    <div class="input-icon">🔒</div>
+                </div>
+                <div class="forgot-pin">
+                    <a href="#" id="forgotPinLink" role="button">Forgot PIN?</a>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn">Login to Account</button>
+
+            <div class="security-badge">
+                <span>🛡️</span>
+                <span>Your information is secure and encrypted</span>
+            </div>
+
+            <div class="create-account-link">
+                Don't have an account? <a href="{% url 'create_account' %}">Create one now</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<dialog id="contactDialog" class="contact-dialog" aria-labelledby="contactDialogTitle">
+    <button type="button" class="contact-dialog-close" id="contactDialogCloseX" aria-label="Close">&times;</button>
+    <div class="contact-dialog-inner">
+        <h3 id="contactDialogTitle">Forgot your PIN?</h3>
+        <p>Contact us: dev.arshdeepsingh@gmail.com arshdeepsingh@mybank for any issue.</p>
+        <div class="contact-dialog-actions">
+            <button type="button" class="contact-dialog-ok" id="contactDialogOk">OK</button>
+        </div>
+    </div>
+</dialog>
+
+<script>
+(function () {
+    var dialog = document.getElementById('contactDialog');
+    var link = document.getElementById('forgotPinLink');
+    if (!dialog || !link || typeof dialog.showModal !== 'function') {
+        if (link && dialog) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                alert('Contact us: dev.arshdeepsingh@gmail.com arshdeepsingh@mybank for any issue.');
+            });
+        }
+        return;
+    }
+    function openDialog(e) {
+        e.preventDefault();
+        dialog.showModal();
+    }
+    function closeDialog() {
+        dialog.close();
+    }
+    link.addEventListener('click', openDialog);
+    document.getElementById('contactDialogOk').addEventListener('click', closeDialog);
+    document.getElementById('contactDialogCloseX').addEventListener('click', closeDialog);
+    dialog.addEventListener('click', function (e) {
+        if (e.target === dialog) {
+            closeDialog();
+        }
+    });
+})();
+</script>
+
+{% endblock %}

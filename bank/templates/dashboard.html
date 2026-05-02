@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .dashboard-section {
+        padding: 50px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .welcome-card {
+        background: white;
+        border-radius: 25px;
+        padding: 50px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        margin-bottom: 40px;
+        animation: fadeInUp 0.8s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .welcome-header {
+        margin-bottom: 30px;
+    }
+
+    .welcome-header h1 {
+        font-size: 42px;
+        color: #2d3748;
+        margin-bottom: 15px;
+        font-weight: 800;
+    }
+
+    .welcome-header h1 span {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .account-details {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .detail-icon {
+        font-size: 24px;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .detail-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail-label {
+        font-size: 13px;
+        color: #718096;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+        font-size: 18px;
+        color: #2d3748;
+        font-weight: 700;
+        margin-top: 2px;
+    }
+
+    .balance-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 35px 40px;
+        color: white;
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        margin-bottom: 30px;
+    }
+
+    .balance-label {
+        font-size: 16px;
+        opacity: 0.9;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .balance-amount {
+        font-size: 48px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .balance-icon {
+        font-size: 40px;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 40px;
+    }
+
+    .data-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        margin-top: 25px;
+    }
+
+    .data-card h3 {
+        color: #2d3748;
+        margin-bottom: 15px;
+    }
+
+    .data-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #edf2f7;
+        color: #2d3748;
+        font-size: 14px;
+    }
+
+    .data-item:last-child {
+        border-bottom: none;
+    }
+
+    .status-pill {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-left: 8px;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-approved {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .txn-badge {
+        display: inline-block;
+        min-width: 120px;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-right: 8px;
+        text-align: center;
+    }
+
+    .txn-deposit, .txn-transfer-received {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .txn-withdraw, .txn-transfer-sent {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .action-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        border: 2px solid transparent;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    .action-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+    }
+
+    .action-card-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .action-card h3 {
+        color: #2d3748;
+        font-size: 24px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .action-card p {
+        color: #718096;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .dashboard-section {
+            padding: 20px;
+        }
+
+        .welcome-card {
+            padding: 30px 25px;
+        }
+
+        .welcome-header h1 {
+            font-size: 28px;
+        }
+
+        .account-details {
+            gap: 25px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+        }
+
+        .balance-card {
+            padding: 25px 30px;
+        }
+
+        .balance-amount {
+            font-size: 36px;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-section">
+    <div class="welcome-card">
+        <div class="welcome-header">
+            <h1>Welcome back, <span>{{acc.name}}</span>! 👋</h1>
+        </div>
+
+        <div class="account-details">
+            <div class="detail-item">
+                <div class="detail-icon">🏦</div>
+                <div class="detail-content">
+                    <span class="detail-label">Account Number</span>
+                    <span class="detail-value">{{ acc.acc_no }}</span>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-icon">💼</div>
+                <div class="detail-content">
+                    <span class="detail-label">Occupation</span>
+                    <span class="detail-value">{{acc.occupation}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="balance-card">
+            <div class="balance-label">Current Balance</div>
+            <div class="balance-amount">
+                <span class="balance-icon">💰</span>
+                <span>₹{{acc.balance}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <a href="{% url 'deposit' %}" class="action-card">
+            <span class="action-card-icon">💰</span>
+            <h3>Deposit</h3>
+            <p>Create a deposit request for admin approval</p>
+        </a>
+
+        <a href="{% url 'withdraw' %}" class="action-card">
+            <span class="action-card-icon">💸</span>
+            <h3>Withdraw</h3>
+            <p>Withdraw money from your account anytime</p>
+        </a>
+
+        <a href="{% url 'transaction_history' %}" class="action-card">
+            <span class="action-card-icon">📄</span>
+            <h3>Transactions</h3>
+            <p>View full transaction history with filters</p>
+        </a>
+    </div>
+
+    <div class="data-card">
+        <h3>Recent Deposit Requests</h3>
+        {% if deposit_requests %}
+            {% for req in deposit_requests %}
+            <div class="data-item">
+                ₹{{ req.amount }} - {{ req.requested_at|date:"d M Y, h:i A" }}
+                <span class="status-pill status-{{ req.status }}">{{ req.status }}</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="data-item">No deposit requests yet.</div>
+        {% endif %}
+    </div>
+
+    <div class="data-card">
+        <h3>Unread Notifications</h3>
+        {% if unread_notifications %}
+            {% for notice in unread_notifications %}
+            <div class="data-item">
+                {{ notice.message }} <br>
+                <small>{{ notice.created_at|date:"d M Y, h:i A" }}</small>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="data-item">No new notifications.</div>
+        {% endif %}
+    </div>
+
+    <div class="data-card">
+        <h3>Recent Transactions</h3>
+        {% if transactions %}
+            {% for txn in transactions %}
+            <div class="data-item">
+                {% if txn.transaction_type == 'transfer_sent' %}
+                    <span class="txn-badge txn-transfer-sent">Sent</span>
+                    ₹{{ txn.amount }} to {{ txn.counterparty.name }} (A/C {{ txn.counterparty.acc_no }})
+                {% elif txn.transaction_type == 'transfer_received' %}
+                    <span class="txn-badge txn-transfer-received">Received</span>
+                    ₹{{ txn.amount }} from {{ txn.counterparty.name }} (A/C {{ txn.counterparty.acc_no }})
+                {% elif txn.transaction_type == 'deposit' %}
+                    <span class="txn-badge txn-deposit">Deposit</span>
+                    ₹{{ txn.amount }} credited
+                {% else %}
+                    <span class="txn-badge txn-withdraw">Withdraw</span>
+                    ₹{{ txn.amount }} debited
+                {% endif %}
+                <br>
+                <small>{{ txn.created_at|date:"d M Y, h:i A" }}</small>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="data-item">No transactions yet.</div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

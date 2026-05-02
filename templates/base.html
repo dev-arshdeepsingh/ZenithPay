@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ZenithPay</title>
+    <style>
+        :root {
+            --page-bg: linear-gradient(160deg, #0f172a 0%, #1e293b 45%, #0f172a 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background: var(--page-bg);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--page-bg);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 50%, #e9d5ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            cursor: pointer;
+            color: #cbd5e1;
+            background: transparent;
+            position: relative;
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: #e2e8f0;
+        }
+
+        .nav-btn:hover::after {
+            width: 50%;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            padding: 12px 30px;
+            text-decoration: none;
+        }
+
+        .login-btn::after {
+            display: none;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .reset-pin-btn {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+            padding: 12px 30px;
+            text-decoration: none;
+        }
+
+        .reset-pin-btn::after {
+            display: none;
+        }
+
+        .reset-pin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.6);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            padding: 12px 30px;
+            text-decoration: none;
+        }
+
+        .logout-btn::after {
+            display: none;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .nav-links {
+                gap: 8px;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .login-btn, .logout-btn, .reset-pin-btn {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'home' %}" class="logo">🏦 ZenithPay</a>
+
+        <div class="nav-links">
+            {% if request.session.acc_no %}
+                <!-- AFTER LOGIN MENU -->
+                <a href="{% url 'dashboard' %}" class="nav-btn">Dashboard</a>
+                <a href="{% url 'deposit' %}" class="nav-btn">Deposit</a>
+                <a href="{% url 'withdraw' %}" class="nav-btn">Withdraw</a>
+                <a href="{% url 'transfer' %}" class="nav-btn">Money Transfer</a>
+                <a href="{% url 'transaction_history' %}" class="nav-btn">Transactions</a>
+                <a href="{% url 'reset_pin' %}" class="reset-pin-btn">Reset PIN</a>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+
+            {% else %}
+                <!-- BEFORE LOGIN MENU -->
+                <a href="{% url 'login' %}" class="login-btn">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
