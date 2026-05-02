@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['zenithpayy.onrender.com']
 
+CSRF_TRUSTED_ORIGINS = ['https://zenithpayy.onrender.com']
 
 # Application definition
 

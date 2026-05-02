@@ -116,6 +116,7 @@
     <div class="panel">
         <h2>Transaction History</h2>
         <form method="get" class="filters">
+            {% csrf_token %}
             <div>
                 <label for="type">Type</label>
                 <select id="type" name="type">
